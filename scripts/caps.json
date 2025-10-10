@@ -1,0 +1,18 @@
+{
+  "devices": {
+    "presenceSensor": {
+      "attributes": { "presence": ["present", "notpresent"] },
+      "actions": []
+    },
+    "motionSensor": {
+      "attributes": { "motion": ["active", "inactive"] },
+      "actions": []
+    },
+    "switch": {
+      "attributes": { "switch": ["on", "off"] },
+      "actions": ["on", "off"]
+    }
+  },
+  "ops": ["==", "!="],
+  "bool_ops": ["&&", "||"]
+}

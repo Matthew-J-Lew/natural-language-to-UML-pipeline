@@ -1,0 +1,27 @@
+{
+  "bundle_name": "Bundle1",
+  "devices": [
+    {"id": "presenceSensor", "type": "presenceSensor", "attributes": ["presence"]},
+    {"id": "motionSensor", "type": "motionSensor", "attributes": ["motion"]},
+    {"id": "switch", "type": "switch", "attributes": ["switch"]}
+  ],
+  "states": [
+    {"id": "Off1", "invariants": [
+      "presenceSensor.presence == \"notpresent\"",
+      "switch.switch == \"off\""
+    ]},
+    {"id": "On1", "invariants": [
+      "presenceSensor.presence == \"present\"",
+      "switch.switch == \"on\""
+    ]}
+  ],
+  "transitions": [
+    {"source": "Off1", "target": "On1",
+     "trigger": "presenceSensor.presence == \"present\"",
+     "action": "switch.on()"},
+    {"source": "On1", "target": "Off1",
+     "trigger": "presenceSensor.presence == \"notpresent\"",
+     "action": "switch.off()"}
+  ],
+  "notes": "Arrival maps to presence==present; lamp maps to switch."
+}
