@@ -3,7 +3,7 @@ For validate_spec.py:
 cd C:\path\to\NLPipeline\scripts
 py validate_spec.py ..\temp\spec.json caps.json
 
-Should output "OK" or any errors
+Should output "OK" or any errors.
 
 
 For gen_uml_from_spec.py:
