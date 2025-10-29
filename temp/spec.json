@@ -53,5 +53,5 @@
       "action": "switch.off()"
     }
   ],
-  "notes": "This configuration controls a lamp based on the presence of a person, using a presence sensor and a switch."
+  "notes": "Configure automation using presence sensor to control switch; motion sensor currently not utilized."
 }

@@ -28,8 +28,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        288,
-        160
+        704,
+        288
       ],
       "id": "3d9eb944-8d25-49d6-8615-50219f8d9327",
       "name": "Respond to Webhook"
@@ -178,7 +178,7 @@
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        112,
+        -16,
         0
       ],
       "id": "f950f307-7d3f-4ab5-8f88-f8edd45c205d",
@@ -351,6 +351,90 @@
       ],
       "id": "70cd3954-5059-49d0-8cba-e1138f68e8a9",
       "name": "re-check is valid?"
+    },
+    {
+      "parameters": {
+        "command": "cmd /c \"C:\\Users\\Matthew\\Desktop\\IDEs\\VSCode Projects\\NLPipeline\\scripts\\run_genpuml.bat\""
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "af299b80-b3b7-4d13-a9c5-3fdb094ddec6",
+      "name": "Execute gen_puml_from_spec.py"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://kroki.io/plantuml/svg",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/plain",
+        "body": "={{ $json.pumlText }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "svgText"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        976,
+        0
+      ],
+      "id": "bb1ee4a7-e075-4495-b5ab-bc3af36a1ba7",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const repo = 'C:/Users/Matthew/Desktop/IDEs/VSCode Projects/NLPipeline';\n// Normalize slashes from \"temp\\\\Bundle_Bundle1.puml\" → \"temp/Bundle_Bundle1.puml\"\nconst rel = String($json.stdout || '').trim().replace(/\\\\/g, '/');\nreturn {\n  absPuml: `${repo}/${rel}`,\n  relPuml: rel,\n  svgName: rel.replace(/\\.puml$/i, '.svg')\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "403ddc92-9562-40cb-a3ee-3a8335e39364",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $json.absPuml }}",
+        "options": {
+          "fileExtension": ".puml"
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "4dd1cead-4351-4c09-97dd-95a19f9ba4f6",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "destinationKey": "pumlText",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        784,
+        0
+      ],
+      "id": "a4a49099-09c8-493c-99bd-600fd4f49819",
+      "name": "Extract from File"
     }
   ],
   "pinData": {},
@@ -454,7 +538,7 @@
       "main": [
         [
           {
-            "node": "Respond to Webhook",
+            "node": "Execute gen_puml_from_spec.py",
             "type": "main",
             "index": 0
           }
@@ -566,13 +650,57 @@
           }
         ]
       ]
+    },
+    "Execute gen_puml_from_spec.py": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "6b3036a9-792d-414b-bf31-70b569d67e7b",
+  "versionId": "cdce296b-347c-43ff-8eeb-b179b5e33cad",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "6647802072d2cc4e8eb214734bff764ab57f643f93ffeccd122f974954d36b0a"

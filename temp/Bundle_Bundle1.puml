@@ -1,0 +1,56 @@
+@startuml
+title Bundle: Bundle1 — State Machine Preview
+
+' --------- Visual polish ----------
+skinparam backgroundColor #FFFFFF
+skinparam state {
+  BorderColor #222222
+  BackgroundColor #FAFAFA
+  FontColor #111111
+}
+skinparam note {
+  BackgroundColor #FFFFEE
+  BorderColor #DDDD99
+}
+skinparam ArrowColor #333333
+skinparam ArrowFontColor #111111
+skinparam ArrowThickness 1.2
+hide empty description
+
+' --------- Legend ----------
+legend right
+  == Legend ==
+  - State note: invariants (must hold in state)
+  - Transition label: trigger / action
+  - Devices legend lists known devices, their types & attributes
+end legend
+
+' --------- Devices (legend, safe for all diagram types) ----------
+legend left
+  == Devices ==
+  presenceSensor : presenceSensor  (attrs: presence)
+  motionSensor : motionSensor  (attrs: motion)
+  switch : switch  (attrs: switch)
+end legend
+
+[*] --> Off1
+
+state "Off1" as Off1
+note right of Off1
+  == invariants ==
+  presenceSensor.presence == "notpresent"
+  switch.switch == "off"
+end note
+state "On1" as On1
+note right of On1
+  == invariants ==
+  presenceSensor.presence == "present"
+  switch.switch == "on"
+end note
+
+Off1 --> On1 : presenceSensor.presence == "present" / switch.on()
+On1 --> Off1 : presenceSensor.presence == "notpresent" / switch.off()
+
+On1 --> [*]
+
+@enduml
