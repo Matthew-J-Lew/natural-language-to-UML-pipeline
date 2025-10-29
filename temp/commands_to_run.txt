@@ -10,3 +10,14 @@ For gen_uml_from_spec.py:
 py gen_uml_from_spec.py ..\temp\spec.json template.uml.tpl ..\temp
 
 #Should output a .uml file
+
+For n8n webhook pipeline:
+
+$body = @{
+    requirement = "If someone arrives, turn the lamp on. When they leave, turn it off."
+    bundle_name = "Bundle1"
+    } | ConvertTo-Json
+Invoke-RestMethod -Method POST `
+    -Uri "http://localhost:5678/webhook-test/NLPipeline/extract" `
+    -ContentType "application/json" `
+    -Body $body
